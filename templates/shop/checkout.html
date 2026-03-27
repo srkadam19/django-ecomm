@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - ShopDjango{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="fas fa-credit-card me-2"></i>Checkout</h2>
+
+    <div class="row mt-4">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">Shipping Information</h5></div>
+                <div class="card-body">
+                    <form id="checkout-form">
+                        <div class="mb-3">
+                            <label class="form-label">Shipping Address</label>
+                            <textarea class="form-control" id="shipping_address" rows="3" required
+                                placeholder="Enter your full shipping address"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" required
+                                placeholder="Enter your phone number">
+                        </div>
+                        <div id="checkout-error" class="alert alert-danger" style="display:none;"></div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100" id="place-order-btn">
+                            <i class="fas fa-check me-2"></i>Place Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card bg-light">
+                <div class="card-header"><h5 class="mb-0">Order Summary</h5></div>
+                <div class="card-body">
+                    {% for item in cart.items.all %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                        <strong>${{ item.subtotal }}</strong>
+                    </div>
+                    {% endfor %}
+                    <hr>
+                    <div class="d-flex justify-content-between h5">
+                        <span>Total</span>
+                        <span class="text-primary">${{ cart.total_price }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('place-order-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+
+    try {
+        const data = await apiCall('/api/checkout/', 'POST', {
+            shipping_address: document.getElementById('shipping_address').value,
+            phone: document.getElementById('phone').value,
+        });
+
+        if (data.error) {
+            document.getElementById('checkout-error').style.display = 'block';
+            document.getElementById('checkout-error').textContent = data.error;
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check me-2"></i>Place Order';
+        } else {
+            window.location.href = `/orders/${data.id}/`;
+        }
+    } catch(e) {
+        document.getElementById('checkout-error').style.display = 'block';
+        document.getElementById('checkout-error').textContent = 'An error occurred. Please try again.';
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check me-2"></i>Place Order';
+    }
+});
+</script>
+{% endblock %}

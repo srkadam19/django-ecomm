@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip --version)",
+      "Bash(pip install:*)",
+      "Bash(python -m django startproject ecommerce .)",
+      "Bash(python manage.py startapp shop)",
+      "Bash(psql --version)",
+      "Bash(where psql:*)",
+      "Read(//c/Program Files/PostgreSQL/**)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/PostgreSQL/17/bin\")",
+      "Bash(psql -U postgres -c \"CREATE DATABASE ecommerce_db;\")",
+      "Bash(pg_isready -h localhost -p 5432)",
+      "Bash(net start:*)",
+      "Bash(sc query:*)",
+      "Bash(powershell -Command \"Get-Service *postgres* 2>$null | Format-List Name,Status\")",
+      "Bash(powershell -Command \"Get-Service *postgres* | Format-List Name,Status\")",
+      "Bash(pg_ctl -D \"C:/Program Files/PostgreSQL/17/data\" start)",
+      "Bash(PGPASSWORD=postgres psql -U postgres -c \"CREATE DATABASE ecommerce_db;\")",
+      "Bash(python manage.py makemigrations shop)",
+      "Bash(python -c \"import sys; print\\(sys.executable\\)\")",
+      "Bash(pip show:*)",
+      "Bash(python -m pip install django djangorestframework psycopg2-binary Pillow)",
+      "Bash(python manage.py migrate)",
+      "Bash(python manage.py seed_data)",
+      "Bash(python manage.py runserver)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8000/)"
+    ]
+  }
+}

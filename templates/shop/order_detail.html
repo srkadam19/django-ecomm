@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }} - ShopDjango{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'orders' %}">My Orders</a></li>
+            <li class="breadcrumb-item active">Order #{{ order.id }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Order #{{ order.id }}</h5>
+                    {% if order.status == 'pending' %}
+                    <span class="badge bg-warning text-dark fs-6">Pending</span>
+                    {% elif order.status == 'processing' %}
+                    <span class="badge bg-info fs-6">Processing</span>
+                    {% elif order.status == 'shipped' %}
+                    <span class="badge bg-primary fs-6">Shipped</span>
+                    {% elif order.status == 'delivered' %}
+                    <span class="badge bg-success fs-6">Delivered</span>
+                    {% elif order.status == 'cancelled' %}
+                    <span class="badge bg-danger fs-6">Cancelled</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead><tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th></tr></thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>${{ item.price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td class="fw-bold">${{ item.subtotal }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-dark">
+                                <td colspan="3" class="text-end"><strong>Total</strong></td>
+                                <td><strong>${{ order.total_amount }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">Shipping Details</h5></div>
+                <div class="card-body">
+                    <p><strong>Address:</strong><br>{{ order.shipping_address }}</p>
+                    <p><strong>Phone:</strong><br>{{ order.phone }}</p>
+                    <p><strong>Order Date:</strong><br>{{ order.created_at|date:"M d, Y H:i" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
