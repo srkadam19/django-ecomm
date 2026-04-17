@@ -31,3 +31,5 @@ Then open http://127.0.0.1:8000/ in the browser.
 Important: If the other laptop has a different PostgreSQL username/password, update ecommerce/settings.py:63-65 (USER and PASSWORD fields) before running migrate.
 
 Admin login: admin / admin123
+
+SSR
